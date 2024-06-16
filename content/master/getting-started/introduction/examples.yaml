@@ -1,0 +1,35 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+spec:
+  group: test.example.org
+  names:
+    kind: myComputeResource
+  versions:
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                storage:
+                  type: string
+                  oneOf:
+                    - pattern: '^small$'
+                    - pattern: '^large$'
+              required:
+                - storage
+  claimNames:     # allow creating XC / apiVersion used to create it == apiVersion used by XR
+    kind: computeClaim
+    # Removed for brevity
+
+---
+
+# Composite Resource (XR) -- based on the -- previous XRD
+apiVersion: test.example.org/v1alpha1
+kind: myComputeResource
+metadata:
+  name: myResource
+spec:
+  storage: "large"
