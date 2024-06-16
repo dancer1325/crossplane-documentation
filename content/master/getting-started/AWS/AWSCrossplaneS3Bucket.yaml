@@ -1,0 +1,9 @@
+apiVersion: s3.aws.upbound.io/v1beta1   # apiVersion & kind value are determined by the provider
+kind: Bucket
+metadata:
+  generateName: crossplane-bucket-    # hash seed to create an unique S3 bucket name
+spec:
+  forProvider:
+    region: us-east-2
+  providerConfigRef:
+    name: default
