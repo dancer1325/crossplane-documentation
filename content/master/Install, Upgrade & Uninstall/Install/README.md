@@ -27,6 +27,8 @@
         * 'crossplane-init container' installs [CRDs](https://github.com/crossplane/crossplane/tree/master/cluster/crds)
       * 'crossplane-rbac-manager'
         * manages Kubernetes ClusterRoles
+  * `kubectl api-resources | grep crossplane`
+    * check the new API endpoints added
 
 * TODO:
 
