@@ -1,0 +1,37 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+spec:
+  resources:
+    - name: my-composed-resource
+      base:
+      # Removed for brevity
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.field1
+          toFieldPath: metadata.labels["patchLabel"]
+
+---
+# PatchSet to Composition
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+# Removed for brevity
+spec:
+  patchSets:
+    - name: my-patchset
+      patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.desiredRegion
+          toFieldPath: spec.forProvider.region
+  resources:
+    - name: bucket1
+      base:
+      # Removed for brevity
+      patches:
+        - type: PatchSet
+          patchSetName: my-patchset
+    - name: bucket2
+      base:
+      # Removed for brevity
+      patches:
+        - type: PatchSet
+          patchSetName: my-patchset
