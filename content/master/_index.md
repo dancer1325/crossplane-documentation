@@ -30,9 +30,10 @@ cascade:
   * use cases
     * create MULTIPLE resources | MULTIPLE clouds /
       * -- via -- 1! API call
-      * Kubernetes == control plane for everything
+      * 💡-> Kubernetes resources & cloud resources | 1! control plane💡 
       * -- provided by -- vendors
     * create NEW abstractions & custom APIs / -- powered by -- Kubernetes resources
+      * == create & manage resources / ⚠️EXTERNAL to the cluster ⚠️
 
 * Control plane
   * create & manage the resources' lifecycle
