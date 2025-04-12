@@ -4,73 +4,53 @@ weight: 1
 description: Background on the components installed with Crossplane and their functions.
 ---
 
-The base Crossplane installation consists of two pods, the `crossplane` pod and
-the `crossplane-rbac-manager` pod. Both pods install in the `crossplane-system`
-namespace by default. 
-
+* base Crossplane installation
+  * | `crossplane-system` namespace
+    * `crossplane` pod + `crossplane-rbac-manager` pod
 
 ## Crossplane pod
 
+* reconciles 
+  * core Crossplane components,
+  * Claims
+  * composite resources
+
 ### Init container
-Before starting the core Crossplane container an _init_ container runs. The init
-container installs the core Crossplane 
-[Custom Resource Definitions](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/#customresourcedefinitions)
-(`CRDs`), configures Crossplane webhooks and installs any supplied Providers or
-Configurations. 
-
-{{<hint "tip" >}}
-The Kubernetes documentation contains more information about 
-[init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/).
-{{< /hint >}}
-
-The settings the init container sets include installing Provider or Configuration 
-packages with Crossplane, customizing the namespace Crossplane installs in and 
-defining webhook configurations. 
-
-The core CRDs installed by the init container include: 
-* CompositeResourceDefinitions, Compositions, Configurations and Providers
-* Locks to manage package dependencies
-* DeploymentRuntimeConfigs to apply settings to installed Providers and Functions
-* StoreConfigs for connecting external secret stores like 
-[HashiCorp Vault](https://www.vaultproject.io/)
-
-{{< hint "note" >}}
-
-The [Install Crossplane]({{< ref "../software/install" >}}) section has more
-information about customizing the Crossplane install.
-{{< /hint >}}
-
-The status `Init` on the Crossplane pod is the init container running. 
-
-```shell
-kubectl get pods -n crossplane-system
-NAME                                       READY   STATUS     RESTARTS   AGE
-crossplane-9f6d5cd7b-r9j8w                 0/1     Init:0/1   0          6s
-```
-
-The init container completes and starts the Crossplane core container 
-automatically.
-
-```shell
-kubectl get pods -n crossplane-system
-NAME                                       READY   STATUS    RESTARTS   AGE
-crossplane-9f6d5cd7b-r9j8w                 1/1     Running   0          15s
-```
+* BEFORE starting the core Crossplane container 
+    ```shell
+    kubectl get pods -n crossplane-system
+    NAME                                       READY   STATUS     RESTARTS   AGE
+    crossplane-9f6d5cd7b-r9j8w                 0/1     Init:0/1   0          6s
+    # | Status, Init    == init container running
+    ```
+* in charge of
+  * installs the core Crossplane `CRDs`
+    * `CompositeResourceDefinitions`, `Compositions`, `Configurations` and `Providers`
+    * locks -- to -- manage package dependencies
+    * `DeploymentRuntimeConfigs` 
+      * -- to -- apply settings | installed Providers & Functions
+    * `StoreConfigs` 
+      * -- for -- connecting external secret stores (_Example:_ [HashiCorp Vault](https://www.vaultproject.io/))
+  * configures Crossplane webhooks
+  * installs ANY supplied Providers or Configurations
+    * -- via -- Crossplane
 
 ### Core container
 
-The main Crossplane container, called the _core_ container, enforces
-the desired state of Crossplane resources, manages leader elections and process
-webhooks. 
-
-{{<hint "note" >}}
-The Crossplane pod only reconciles core Crossplane components, including Claims
-and composite resources. Providers are responsible for reconciling their managed
-resources. 
-{{< /hint >}}
+* AFTER completing the init container
+    ```shell
+    kubectl get pods -n crossplane-system
+    NAME                                       READY   STATUS    RESTARTS   AGE
+    crossplane-9f6d5cd7b-r9j8w                 1/1     Running   0          15s
+    ```
+* in charge of
+  * enforces Crossplane resources' desired state
+  * manages leader elections
+  * process webhooks
 
 #### Reconcile loop
 
+* TODO:
 The core container operates on a _reconcile loop_, constantly checking the 
 status of deployed resources and correcting any "drift." After checking a 
 resource Crossplane waits some time and checks again.
