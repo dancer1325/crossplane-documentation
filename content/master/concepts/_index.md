@@ -61,19 +61,24 @@ description: Understand Crossplane's core components
       * apply logic & loops | 
         * BEFORE Crossplane creates resources
         * AFTER Crossplane creates resources
-  * [**Patches and Transforms**]({{<ref "./patch-and-transform">}}) allow platform
-    engineers to use user inputs to their custom API and change how Crossplane
-    creates resources. Patches and transforms allow for flexible and
-    abstract inputs like `big` or `encrypted` to have specific meanings when
-    creating the actual managed resources.
-  * [**EnvironmentConfigs**]({{<ref "./environment-configs">}}) are an in-memory
-    data store, like a Kubernetes ConfigMap. EnvironmentConfigs are useful for
-    custom resource mapping or storing and retrieving data across Claims and
-    Composite Resources.
-  * [**Usages**]({{<ref "./usages">}}) defining critical resources or custom
-    dependency mappings. Usages can prevent Crossplane from deleting or can
-    ensure that a parent resource waits for Crossplane to delete all child 
-    resources first.
+  * [Patches and Transforms](./patch-and-transform)
+    * enable  
+      * platform engineers use user inputs | their custom API
+      * how Crossplane creates resources
+      * flexible & abstract inputs
+        * _Example:_ | create the actual managed resources, `big` or `encrypted` to have specific meanings
+  * [EnvironmentConfigs](./environment-configs)
+    * | in-memory data store (Kubernetes ConfigMap)
+    * uses
+      * custom resource mapping
+      * store & retrieve data -- across -- Claims & Composite Resources
+  * [Usages](./usages) 
+    * == define 
+      * critical resources
+      * custom dependency mappings 
+    * uses
+      * prevent Crossplane -- from -- deleting
+      * ensure that a parent resource -- waits for -- Crossplane / delete ALL child resources first
   * [Packages](./packages)
     * allows
       * packaging up an ENTIRE custom platform
