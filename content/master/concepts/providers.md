@@ -4,38 +4,27 @@ weight: 5
 description: "Providers connect Crossplane to external APIs"
 ---
 
-Providers enable Crossplane to provision infrastructure on an
-external service. Providers create new Kubernetes APIs and map them to external
-APIs.
-
-Providers are responsible for all aspects of connecting to non-Kubernetes
-resources. This includes authentication, making external API calls and
-providing
-[Kubernetes Controller](https://kubernetes.io/docs/concepts/architecture/controller/)
-logic for any external resources.
-
-Examples of providers include:
-
-* [Provider AWS](https://github.com/upbound/provider-aws)
-* [Provider Azure](https://github.com/upbound/provider-azure)
-* [Provider GCP](https://github.com/upbound/provider-gcp)
-* [Provider Kubernetes](https://github.com/crossplane-contrib/provider-kubernetes)
-
-{{< hint "tip" >}}
-Find more providers in the [Upbound Marketplace](https://marketplace.upbound.io).
-{{< /hint >}}
-
-<!-- vale write-good.Passive = NO -->
-<!-- "are Managed" isn't passive in this context -->
-Providers define every external resource they can create in Kubernetes as a
-Kubernetes API endpoint.  
-These endpoints are
-[_Managed Resources_]({{<ref "managed-resources" >}}).
-<!-- vale write-good.Passive = YES -->
-
+* Providers
+  * allows
+    * provision infrastructure | external service
+      * 💡== EVERY external resource / can be creatd | Kubernetes == Kubernetes API endpoint 💡
+        * create NEW Kubernetes APIs == [_Managed Resources_](managed-resources)
+        * map them -- to -- EXTERNAL APIs
+  * responsible for 
+    * reconciling their managed resources
+    * ALL about -- connecting to -- NON-Kubernetes resources ==
+      * authentication,
+      * making external API calls
+      * providing [Kubernetes Controller](https://kubernetes.io/docs/concepts/architecture/controller/) logic
+  * _Examples:_ [Upbound Marketplace](https://marketplace.upbound.io)
+    * [Provider AWS](https://github.com/upbound/provider-aws)
+    * [Provider Azure](https://github.com/upbound/provider-azure)
+    * [Provider GCP](https://github.com/upbound/provider-gcp)
+    * [Provider Kubernetes](https://github.com/crossplane-contrib/provider-kubernetes)
 
 ## Install a Provider
 
+* TODO:
 Installing a provider creates new Kubernetes resources representing the 
 Provider's APIs. Installing a provider also creates a Provider pod that's 
 responsible for reconciling the Provider's APIs into the Kubernetes cluster. 
