@@ -4,8 +4,6 @@ description: Learn more about Crossplane.
 weight: 500
 ---
 
-If you have any questions, please drop us a note on [Crossplane Slack][join-crossplane-slack] or [contact us][contact-us]!
-
 ***Learn more about using Crossplane***
  - [Latest Design Docs](https://github.com/crossplane/crossplane/tree/master/design)
  - [Roadmap](https://github.com/crossplane/crossplane/blob/master/ROADMAP.md)
@@ -28,8 +26,3 @@ If you have any questions, please drop us a note on [Crossplane Slack][join-cros
 - Subscribe to our [YouTube Channel](https://www.youtube.com/channel/UC19FgzMBMqBro361HbE46Fw)
 - Drop us a note on Twitter: [@crossplane_io](https://twitter.com/crossplane_io)
 - Email us: [info@crossplane.io](mailto:info@crossplane.io)
-
-<!-- Named links -->
-
-[join-crossplane-slack]: https://slack.crossplane.io
-[contact-us]: https://github.com/crossplane/crossplane#contact
