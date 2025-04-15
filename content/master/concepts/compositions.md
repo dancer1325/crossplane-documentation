@@ -7,7 +7,7 @@ description: "Compositions are a template for creating Crossplane resources"
 ---
 
 * == template / 💡create MULTIPLE managed resources -- as -- 1! object 💡
-  * == individual managed resources -- are managed together into -- 1! reusable solution
+  * == individual managed resources -- are managed together as -- 1! reusable solution
 
 ## How to create?
 
