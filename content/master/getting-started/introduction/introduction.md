@@ -3,124 +3,93 @@ title: Crossplane Introduction
 weight: 2
 ---
 
-Crossplane connects your Kubernetes cluster to external,
-non-Kubernetes resources, and allows platform teams to build custom Kubernetes
-APIs to consume those resources.
+* Crossplane
+  * allows
+    * 👀connecting your Kubernetes cluster -- to -- EXTERNAL NON-Kubernetes resources 👀
+      * == users ONLY -- communicate with -- Kubernetes
+        * _Example:_ 
+          * you -- communicate with -- Kubernetes & 
+          * Crossplane -- communicate with -- external resources (AWS, Azure, Google Cloud, ...)
+      * EXTERNAL NON-Kubernetes resources
+        * ⚠️== ANY service / has API ⚠️
+    * building CUSTOM Kubernetes APIs / consume THOSE resources
+  * 💡creates Kubernetes [CRDs](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/) 💡 
+    * == EXTERNAL resources -- are represented as -- NATIVE [Kubernetes objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/) 
+      * -> AVAILABLE FULL [Kubernetes API](https://kubernetes.io/docs/reference/using-api/)
+  * 💡acts -- as a -- [Kubernetes Controller](https://kubernetes.io/docs/concepts/architecture/controller/) 💡
+    * == 
+      * watch the EXTERNAL resources' state 
+      * enforce the state
+        * _Example:_ if something OUTSIDE of Kubernetes modifies or deletes a resource -> Crossplane
+          * reverses the change or
+          * recreates the deleted resource
 
-<!-- vale gitlab.SentenceLength = NO -->
-Crossplane creates Kubernetes
-[Custom Resource Definitions](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/)
-(`CRDs`) to represent the external resources as native 
-[Kubernetes objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/). 
-As native Kubernetes objects, you can use standard commands like `kubectl create`
-and `kubectl describe`. The full 
-[Kubernetes API](https://kubernetes.io/docs/reference/using-api/) is available
-for every Crossplane resource. 
-<!-- vale gitlab.SentenceLength = YES -->
-
-Crossplane also acts as a
-[Kubernetes Controller](https://kubernetes.io/docs/concepts/architecture/controller/)
-to watch the state of the external resources and provide state enforcement. If
-something modifies or deletes a resource outside of Kubernetes, Crossplane reverses
-the change or recreates the deleted resource.
-
-{{<img src="/media/crossplane-intro-diagram.png" alt="Diagram showing a user communicating to Kubernetes. Crossplane connected to Kubernetes and Crossplane communicating with AWS, Azure and GCP" align="center">}}
-With Crossplane installed in a Kubernetes cluster, users only communicate with
-Kubernetes. Crossplane manages the communication to external resources like AWS,
-Azure or Google Cloud.
-
-Crossplane also allows the creation of custom Kubernetes APIs. Platform teams can
-combine external resources and simplify or customize the APIs presented to the
-platform consumers.
+      ![](/content/media/crossplane-intro-diagram.png)
 
 ## Crossplane components overview
-This table provides a summary of Crossplane components and their roles. 
 
-{{< table "table table-hover table-sm">}}
 | Component | Abbreviation | Scope | Summary |
 | --- | --- | --- | ---- | 
-| [Provider]({{<ref "#providers">}}) | | cluster | Creates new Kubernetes Custom Resource Definitions for an external service. |
-| [ProviderConfig]({{<ref "#provider-configurations">}}) | `PC` | cluster | Applies settings for a _Provider_. |
-| [Managed Resource]({{<ref "#managed-resources">}}) | `MR` | cluster | A Provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
-| [Composition]({{<ref "#compositions">}}) |  | cluster | A template for creating multiple _managed resources_ at once. |
-| [Composite Resources]({{<ref "#composite-resources" >}}) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
-| [CompositeResourceDefinitions]({{<ref "#composite-resource-definitions" >}}) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
-| [Claims]({{<ref "#claims" >}}) | `XC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
-{{< /table >}}
+| [Provider](#providers) | | cluster | Creates NEW Kubernetes CRDs / EXTERNAL service |
+| [ProviderConfig](#provider-configurations) | `PC` | cluster | Applies settings / Provider |
+| [Managed Resource](#managed-resources) | `MR` | cluster | A Provider resource created and managed by Crossplane inside the Kubernetes cluster. | 
+| [Composition](compositions) |  | cluster | A template for creating multiple _managed resources_ at once. |
+| [Composite Resources](#composite-resources) | `XR` | cluster | Uses a _Composition_ template to create multiple _managed resources_ as a single Kubernetes object. |
+| [CompositeResourceDefinitions](#composite-resource-definitions) | `XRD` | cluster | Defines the API schema for _Composite Resources_ and _Claims_ |
+| [Claims](#claims) | `XC` | namespace | Like a _Composite Resource_, but namespace scoped. | 
 
 ## The Crossplane Pod
-When installed in a Kubernetes cluster Crossplane creates an initial set of
-Custom Resource Definitions (`CRDs`) of the core Crossplane components. 
 
-{{< expand "View the initial Crossplane CRDs" >}}
-After installing Crossplane use `kubectl get crds` to view the Crossplane
-installed CRDs.
+* | install Crossplane | Kubernetes cluster,
+  * core Crossplane components' set of `CRDs`
 
-```shell
-❯ kubectl get crd
-NAME                                                    
-compositeresourcedefinitions.apiextensions.crossplane.io
-compositionrevisions.apiextensions.crossplane.io        
-compositions.apiextensions.crossplane.io                
-configurationrevisions.pkg.crossplane.io                
-configurations.pkg.crossplane.io                        
-controllerconfigs.pkg.crossplane.io                     
-deploymentruntimeconfigs.pkg.crossplane.io              
-environmentconfigs.apiextensions.crossplane.io          
-functionrevisions.pkg.crossplane.io                     
-functions.pkg.crossplane.io                             
-locks.pkg.crossplane.io                                 
-providerrevisions.pkg.crossplane.io                     
-providers.pkg.crossplane.io                             
-storeconfigs.secrets.crossplane.io                      
-usages.apiextensions.crossplane.io                                        
-```
-{{< /expand >}}
+    ```shell
+    ❯ kubectl get crd
+    NAME                                                    
+    compositeresourcedefinitions.apiextensions.crossplane.io
+    compositionrevisions.apiextensions.crossplane.io        
+    compositions.apiextensions.crossplane.io                
+    configurationrevisions.pkg.crossplane.io                
+    configurations.pkg.crossplane.io                        
+    controllerconfigs.pkg.crossplane.io                     
+    deploymentruntimeconfigs.pkg.crossplane.io              
+    environmentconfigs.apiextensions.crossplane.io          
+    functionrevisions.pkg.crossplane.io                     
+    functions.pkg.crossplane.io                             
+    locks.pkg.crossplane.io                                 
+    providerrevisions.pkg.crossplane.io                     
+    providers.pkg.crossplane.io                             
+    storeconfigs.secrets.crossplane.io                      
+    usages.apiextensions.crossplane.io                                        
+    ```
 
-The following sections describe the functions of some of these CRDs.
-
-<!-- vale Google.Headings = NO -->
-<!-- allow "Providers" -->
 ## Providers
-<!-- vale Google.Headings = YES -->
-A Crossplane _Provider_ creates a second set of CRDs that define how Crossplane
-connects to a non-Kubernetes service. Each external service relies on its own
-Provider. For example, 
-[AWS](https://marketplace.upbound.io/providers/upbound/provider-aws), 
-[Azure](https://marketplace.upbound.io/providers/upbound/provider-azure) 
-and [GCP](https://marketplace.upbound.io/providers/upbound/provider-gcp)
-are different providers for each cloud service.
 
-{{< hint "tip" >}}
-Most Providers are for cloud services but Crossplane can use a Provider to
-connect to any service with an API.
-{{< /hint >}}
-
-For example, an AWS Provider defines Kubernetes CRDs for AWS resources like EC2
-compute instances or S3 storage buckets.
-
-The Provider defines the Kubernetes API definition for the external resource.
-For example, the 
-[Upbound Provider AWS](https://marketplace.upbound.io/providers/upbound/provider-aws/)
-defines a 
-[`bucket`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1) 
-resource for creating and managing AWS S3 storage buckets. 
-
-In the `bucket` CRD is a
-[`spec.forProvider.region`](https://marketplace.upbound.io/providers/upbound/provider-aws/v0.25.0/resources/s3.aws.upbound.io/Bucket/v1beta1#doc:spec-forProvider-region)
-value that defines which AWS region to deploy the bucket in.
-
-The Upbound Marketplace contains a large 
-[collection of Crossplane Providers](https://marketplace.upbound.io/providers).
-
-More providers are available in the [Crossplane Contrib repository](https://github.com/crossplane-contrib/).
-
-Providers are cluster scoped and available to all cluster namespaces.
-
-View all installed Providers with the command `kubectl get providers`.
+* allows
+  * creating NEW (!= Crossplane ones) CRD / non-Kubernetes service 
+    * == how Crossplane -- connects to a -- non-Kubernetes service
+    * non-Kubernetes service's requirements
+      * API
+    * cluster-scoped & 👀AVAILABLE | ALL cluster-namespaces 👀
+* [marketPlace](https://marketplace.upbound.io/providers) & [contribRepository](https://github.com/crossplane-contrib/)
+* `kubectl get providers`
+  * check the installed ones
+* _Examples:_ [AWS](https://marketplace.upbound.io/providers/upbound/provider-family-aws/v1.7.0), [Azure](https://marketplace.upbound.io/providers/upbound/provider-family-azure/v1.3.0), [GCP](https://marketplace.upbound.io/providers/upbound/provider-family-gcp/v1.3.0)
+* `kubectl get providers`
 
 ## Provider configurations
-Providers have _ProviderConfigs_. _ProviderConfigs_ configure settings
+
+* allows
+  * applying settings (authentication, global defaults, ..) / Provider
+    * cluster-scoped
+    * 👁available to ALL cluster-namespaces!! 👁
+    * -> 
+      * API endpoints unique / provider
+* `kubectl get providerconfig`
+  * check the installed ones
+
+* TODO:
+_ProviderConfigs_ configure settings
 related to the Provider like authentication or global defaults for the
 Provider.
 
@@ -131,6 +100,14 @@ _ProviderConfigs_ are cluster scoped and available to all cluster namespaces.
 View all installed ProviderConfigs with the command `kubectl get providerconfig`.
 
 ## Managed resources
+
+* := Provider resource / managed & created by Crossplane, living in Kubernetes cluster
+  * Crossplane controller (as controller pattern == [kube-controller-manager](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/)) enforces settings & existence of `MR`
+  * cluster-scoped
+  * 👁available to ALL cluster-namespaces!! 👁
+* `kubectl get managed`
+  * check ALL managed resources
+  * ⚠️depend on API server -> it may timeout -- [issue](https://github.com/kubernetes/kubernetes/issues/111880) -- ⚠️
 A Provider's CRDs map to individual _resources_ inside the provider. When
 Crossplane creates and monitors a resource it's a _Managed Resource_.
 
@@ -162,6 +139,11 @@ and
 
 ## Compositions
 
+* := template / create multiple `MR` at once
+  * template == 👁 NO resource is created 👁
+  * _Example:_ Create storage resource + compute resource + VN resource -- via -- 1! Composition resource
+* `kubectl get compositions`
+  * check ALL compositions
 A _Composition_ is a template for a collection of _managed resource_. _Compositions_ 
 allow platform teams to define a set of _managed resources_ as a 
 single object.
@@ -193,10 +175,15 @@ _Composite Resources_.
 _Compositions_ are cluster scoped and available to all cluster namespaces.
 
 Use `kubectl get compositions` to view all _compositions_.
- 
 
- ## Composite Resources
+## Composite Resources
 
+* allows
+  * creating multiple `MR` as 1! Kubernetes object -- via -- Composition
+    * cluster-scoped -> requires cluster-wide permissions
+    * 👁available to ALL cluster-namespaces!! 👁
+* `kubectl get composite`
+  * check ALL Composite Resources
 A _Composite Resource_ (`XR`) is a set of provisioned _managed resources_. A
 _Composite Resource_ uses the template defined by a _Composition_ and applies
 any user defined settings. 
@@ -265,6 +252,10 @@ _Composite Resources_ are cluster scoped and available to all cluster namespaces
 Use `kubectl get composite` to view all _Composite Resources_.
 
 ## Composite Resource Definitions
+
+* allows
+  * defining the schema for `XR` & `XC`
+* _Example:_ Check 'examples.yaml'
 _Composite Resource Definitions_ (`XRDs`) create custom Kubernetes APIs used by 
 _Claims_ and _Composite Resources_.
 
@@ -399,6 +390,12 @@ spec:
 ```
 
 ## Claims
+
+* == `XR` at namespace scope
+  * -> main way / developers -- interact with -- Crossplane
+* `kubectl get claim`
+  * check ALL claims
+* _Example:_ Check 'examples.yaml'
 _Claims_ are the primary way developers interact with Crossplane. 
 
 _Claims_ access the custom APIs defined by the platform team in a _Composite
