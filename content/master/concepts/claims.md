@@ -4,49 +4,29 @@ weight: 60
 description: "Claims are a way to consume Crossplane resources with namespace scoping"
 ---
 
-Claims represents a set of managed resources as a single
-Kubernetes object, inside a namespace. 
+* Claims
+  * allows
+    * | namespace, set of managed resources == 1! Kubernetes object
+  * uses
+    * access the custom API / defined | `CompositeResourceDefinition`
+  * vs 👀[composite resources](./composite-resources) 👀
+    * scope
+      * Claims | namespace
+      * composite resources | cluster
 
-Users create claims when they access the
-custom API, defined in the CompositeResourceDefinition. 
+## How to create a Claim?
 
-{{< hint "tip" >}}
-
-Claims are like [composite resources]({{<ref "./composite-resources">}}). The
-difference between Claims and composite resources is Crossplane can create 
-Claims in a namespace, while composite resources are cluster scoped.
-{{< /hint >}}
-
-{{<expand "Confused about Compositions, XRDs, XRs and Claims?" >}}
-Crossplane has four core components that users commonly mix up:
-
-* [Compositions]({{<ref "./compositions">}}) - A template to define how to create resources.
-* [Composite Resource Definition]({{<ref "./composite-resource-definitions">}})
-  (`XRD`) - A custom API specification. 
-* [Composite Resources]({{<ref "./composite-resources">}}) (`XR`) - Created by
-  using the custom API defined in a Composite Resource Definition. XRs use the
-  Composition template to create new managed resources. 
-* Claims (`XRC`) - This page. Like a Composite Resource, but
-  with namespace scoping. 
-{{</expand >}}
-
-## Creating a Claim
-
-Creating a Claim requires a 
-[Composition]({{<ref "./compositions">}}) and a 
-[CompositeResourceDefinition]({{<ref "./composite-resource-definitions">}}) 
-(`XRD`) already installed.  
-
-{{<hint "note" >}}
-The XRD must 
-[enable Claims]({{<ref "./composite-resource-definitions#enable-claims">}}).
-{{< /hint >}}
-
-The Composition defines the set of resources to create.  
-The XRD defines the custom API users call to request the set of resources.
+* requirements
+  * install
+    * [Composition](./compositions)
+      * == set of resources -- to -- create 
+    * [CompositeResourceDefinition](./composite-resource-definitions) /
+      * [enable Claims](./composite-resource-definitions#enable-claims)
+      * == custom API users call / -- request the -- set of resources
 
 ![Diagram of the relationship of Crossplane components](/media/composition-how-it-works.svg)
 
+* TODO:
 For example, 
 this {{<hover label="xrd1" line="2">}}CompositeResourceDefinition{{</hover>}}
 creates a composite resource API endpoint 
