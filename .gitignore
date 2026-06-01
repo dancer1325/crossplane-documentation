@@ -84,3 +84,7 @@ jekyll_files/*
 # Ignore htmltest generated /tmp folder
 ######################
 tmp/*
+
+# AI stuff - ignore user-specific files, commit shared skills/commands
+CLAUDE.md
+/.claude/settings.local.json
