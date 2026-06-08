@@ -4,20 +4,15 @@ weight: 270
 description: "Deploy Crossplane resources with GitOps"
 ---
 
-[Argo CD](https://argoproj.github.io/cd/) and [Crossplane](https://crossplane.io)
-are a great combination. Argo CD provides GitOps while Crossplane turns any Kubernetes
-cluster into a Universal Control Plane for all your resources. Configuration details are
-required in order for the two to work together properly.
-This doc will help you understand these requirements. It is recommended to use
-Argo CD version 2.4.8 or later with Crossplane.
+* requirements
+  * configure to work BOTH TOGETHER
 
-Argo CD synchronizes Kubernetes resource manifests stored in a Git repository
-with those running in a Kubernetes cluster (GitOps). Argo CD has different ways to configure
-how it tracks resources. With Crossplane, you need to configure Argo CD
-to use Annotation based resource tracking. See the [Argo CD docs](https://argo-cd.readthedocs.io/en/latest/user-guide/resource_tracking/) for additional detail.
+* recommendations
+  * Argo CD v2.4.8+
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.HeadingAcronyms = NO -->
+* steps
+  * [configure Argo CD / use Annotation based resource tracking](https://argo-cd.readthedocs.io/en/latest/user-guide/resource_tracking/)
+
 ### Configuring Argo CD with Crossplane
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.HeadingAcronyms = YES -->
