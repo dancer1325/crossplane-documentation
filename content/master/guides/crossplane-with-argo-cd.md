@@ -17,10 +17,7 @@ description: "Deploy Crossplane resources with GitOps"
 <!-- vale Google.Headings = YES -->
 <!-- vale Microsoft.HeadingAcronyms = YES -->
 
-#### Set resource tracking method
-
-In order for Argo CD to track Application resources that contain Crossplane related objects, configure it
-to use the annotation mechanism.
+#### Set resource tracking method
 
 To configure it, edit the `argocd-cm` `ConfigMap` in the `argocd` `Namespace` as such:
 ```yaml
@@ -32,7 +29,8 @@ data:
 
 #### Set health status
 
-Argo CD has a built-in health assessment for Kubernetes resources. The community directly supports some checks
+Argo CD has a built-in health assessment for Kubernetes resources
+The community directly supports some checks
 in Argo's [repository](https://github.com/argoproj/argo-cd/tree/master/resource_customizations). For example the `Provider`
 from `pkg.crossplane.io` already exists which means there no further configuration needed.
 
