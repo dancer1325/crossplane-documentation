@@ -4,8 +4,8 @@ weight: 83
 description: "Expose connection details for composite resources aggregated from their composed resources"
 ---
 
-<!-- vale write-good.TooWordy = NO -->
-This guide shows how to expose connection details for composite resources (XRs).
+* goal
+  * how to expose connection details -- for -- composite resources (XRs)
 Because composite resources can compose multiple resources, the connection
 details they expose are often an aggregate of the connection details from their
 composed resources.
