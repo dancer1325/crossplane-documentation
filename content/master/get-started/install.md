@@ -4,77 +4,27 @@ weight: 100
 description: "Install Crossplane in a Kubernetes cluster"
 ---
 
-Crossplane installs into an existing Kubernetes cluster, creating the
-Crossplane pod.
+* goal
+  * install Crossplane | Kubernetes cluster
 
-Installing Crossplane enables the installation of Crossplane _Provider_,
-_Function_, and _Configuration_ resources.
+## Install Crossplane -- via -- Helm chart
 
-{{< hint "tip" >}}
-If you don't have a Kubernetes cluster create one locally with [Kind](https://kind.sigs.k8s.io/).
-{{< /hint >}}
+* [source code](https://github.com/dancer1325/crossplane/tree/main/cluster/charts/crossplane)
 
-## Prerequisites
-* An actively [supported Kubernetes version](https://kubernetes.io/releases/patch-releases/#support-period)
-* [Helm](https://helm.sh/docs/intro/install/) version `v3.2.0` or later
+TODO: decide where to place? here or other repo
 
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
-## Install Crossplane
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
+* steps
+  * `helm repo add crossplane-stable https://charts.crossplane.io/stable`
+    * if you want to update the local Helm chart cache -> `helm repo update`
+  * `helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane`
+    * if you want to check the changes PREVIOUS to install -> `helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane --dry-run --debug`
+    * `kubectl get pods -n crossplane-system`
+      * check the installed Crossplane pods
+    * `kubectl get crd`
+      * check installed CRD
 
-Install Crossplane using the _Helm chart_.
-
-
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
-### Add the Crossplane Helm repository
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
-
-Add the Crossplane stable repository with the `helm repo add` command.
-
-```shell
-helm repo add crossplane-stable https://charts.crossplane.io/stable
-```
-
-Update the
-local Helm chart cache with `helm repo update`.
-```shell
-helm repo update
-```
-
-<!-- vale Google.Headings = NO -->
-<!-- vale Microsoft.Headings = NO -->
-### Install the Crossplane Helm chart
-<!-- vale Google.Headings = YES -->
-<!-- vale Microsoft.Headings = YES -->
-
-Install the Crossplane Helm chart with `helm install`.
-
-{{< hint "tip" >}}
-View the changes Crossplane makes to your cluster with the
-`helm install --dry-run --debug` options. Helm shows what configurations it
-applies without making changes to the Kubernetes cluster.
-{{< /hint >}}
-
-Crossplane creates and installs into the `crossplane-system` namespace.
-
-```shell
-helm install crossplane \
---namespace crossplane-system \
---create-namespace crossplane-stable/crossplane
-```
-
-View the installed Crossplane pods with `kubectl get pods -n crossplane-system`.
-
-```shell {copy-lines="1"}
-kubectl get pods -n crossplane-system
-NAME                                       READY   STATUS    RESTARTS   AGE
-crossplane-6d67f8cd9d-g2gjw                1/1     Running   0          26m
-crossplane-rbac-manager-86d9b5cf9f-2vc4s   1/1     Running   0          26m
-```
+* enable
+  * create MANY DIFFERENT CR
 
 ## Installation options
 

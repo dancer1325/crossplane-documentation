@@ -3,4 +3,4 @@
 * documentation site
   * built -- via -- [Hugo](https://gohugo.io/)
   * tested -- with -- BrowserStack
-* [documentation](content/master)
+* [documentation](content/master/_index.md)

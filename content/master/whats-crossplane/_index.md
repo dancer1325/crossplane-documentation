@@ -4,8 +4,10 @@ weight: 3
 description: Learn what Crossplane is and why you'd use it.
 ---
 
-Crossplane is a control plane framework for platform engineering. 
+* goal
+  * pros to use Crossplane 
 
+TODO: 
 **Crossplane lets you build control planes to manage your cloud native software.**
 It lets you design the APIs and abstractions that your users use to interact
 with your control planes.
