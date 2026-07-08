@@ -95,6 +95,9 @@ security:
 params:
   # The current "latest" version. Used in the version dropdown
   latest: "2.3"
+  # The current "latest" version of the CLI docs. Used in the CLI version
+  # dropdown.
+  cliLatest: "2.4"
   docs: true
   anchors:
     # Generate heading anchors for any heading between min and max
