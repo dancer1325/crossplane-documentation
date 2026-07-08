@@ -4,6 +4,9 @@ weight: 510
 description: "Build and install Crossplane from source code into a control plane"
 ---
 
+* Full instructions for this advanced installation path is in the
+  [install from source code guide]({{<ref "../guides/install-from-source.md">}}).
+
 Building Crossplane from the source code gives you complete control over the
 build and installation process.
 
