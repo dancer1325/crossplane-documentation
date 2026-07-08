@@ -4,10 +4,14 @@ weight: 100
 description: "Build a control plane project with the Crossplane CLI"
 ---
 
-This guide shows how to use the Crossplane CLI to build a platform API from
-scratch. You create a _project_, define a new `WebApp` custom resource, and
-configure how Crossplane composes it. When a user creates a `WebApp`, Crossplane
-creates a Kubernetes `Deployment` and a `Service`.
+* goal
+  * how to -- , through the Crossplane CLI, -- build a platform API / from scratch
+
+TODO: 
+* You create a _project_, define a new `WebApp` custom resource, and
+  configure how Crossplane composes it
+* When a user creates a `WebApp`, Crossplane
+  creates a Kubernetes `Deployment` and a `Service`.
 
 The Crossplane CLI scaffolds the project, generates the API and composition, and
 runs the project on a local development control plane so you can test it without
@@ -15,7 +19,8 @@ deploying to a shared cluster.
 
 {{<hint "tip">}}
 This guide shows how to write the composition function in Go, Python, KCL, and
-templated YAML. You can pick your preferred language.
+templated YAML
+* You can pick your preferred language.
 {{</hint>}}
 
 A `WebApp` custom resource looks like this:
@@ -85,8 +90,10 @@ This guide requires:
 * A Docker compatible container runtime
 
 The CLI builds the project's functions and runs a local development control
-plane in a [KIND](https://kind.sigs.k8s.io) cluster. Both require a working
-Docker installation. You don't need an existing Kubernetes cluster.
+plane in a [KIND](https://kind.sigs.k8s.io) cluster
+* Both require a working
+Docker installation
+* You don't need an existing Kubernetes cluster.
 
 ## Create the project
 
@@ -126,9 +133,11 @@ Run the remaining commands in this guide from the project directory.
 
 ## The `crossplane-project.yaml` file
 
-The `crossplane-project.yaml` file contains metadata about your project. This
+The `crossplane-project.yaml` file contains metadata about your project
+* This
 metadata influences how the Crossplane CLI builds your project into
-[Crossplane packages]({{<ref "/latest/packages">}}). For now, the file sets only
+[Crossplane packages]({{<ref "/latest/packages">}})
+* For now, the file sets only
 the project's name and OCI repository:
 
 ```yaml {copy-lines="none"}
@@ -141,13 +150,15 @@ spec:
 ```
 
 For the rest of this guide, you can leave the placeholder `repository` as
-is. You must update it if you want to push your project to an OCI registry
+is
+* You must update it if you want to push your project to an OCI registry
 later.
 
 ## Define the API
 
 Crossplane calls a custom resource that's powered by composition a _composite
-resource_, or XR. You define the schema of an XR with a _composite resource
+resource_, or XR
+* You define the schema of an XR with a _composite resource
 definition_, or XRD.
 
 {{<hint "note">}}
@@ -234,7 +245,8 @@ spec:
 
 {{<hint "note">}}
 Generating an XRD from an example XR doesn't let you specify field types,
-defaults, validation rules, or field descriptions. SimpleSchema provides a more
+defaults, validation rules, or field descriptions
+* SimpleSchema provides a more
 powerful, but more complex, way to describe your API.
 {{</hint>}}
 
@@ -316,14 +328,16 @@ spec:
 {{< /tab >}}
 {{< /tabs >}}
 
-The XRD is the contract between your users and your platform. It defines the
+The XRD is the contract between your users and your platform
+* It defines the
 fields a user can set on a `WebApp`, the validation Crossplane applies, and the
 default values Crossplane fills in.
 
 ## Generate the composition
 
 A _composition_ tells Crossplane what to do when a user creates or updates a
-`WebApp`. It contains a pipeline of functions that build the resources
+`WebApp`
+* It contains a pipeline of functions that build the resources
 Crossplane creates.
 
 Generate a composition from the XRD:
@@ -353,18 +367,21 @@ spec:
 <!-- vale Microsoft.Auto = NO -->
 The generated composition contains a single pipeline step that runs
 [function-auto-ready](https://github.com/crossplane-contrib/function-auto-ready),
-which marks the `WebApp` ready when its composed resources are ready. The
+which marks the `WebApp` ready when its composed resources are ready
+* The
 `composition generate` command adds `function-auto-ready` to the project's
 dependencies automatically.
 <!-- vale Microsoft.Auto = YES -->
 
-The composition doesn't yet create any resources. In the next step you write a
+The composition doesn't yet create any resources
+* In the next step you write a
 function that turns a `WebApp` into a `Deployment` and a `Service`.
 
 ## Add dependencies
 
 Your function creates Kubernetes `Deployment` and `Service` resources, so it
-needs the schemas for the Kubernetes core APIs. Add the Kubernetes APIs as a
+needs the schemas for the Kubernetes core APIs
+* Add the Kubernetes APIs as a
 project dependency:
 
 ```shell
@@ -372,11 +389,13 @@ crossplane dependency add k8s:v1.35.0
 ```
 
 The `dependency add` command generates language bindings (schemas) for the
-dependency and records it in `crossplane-project.yaml`. The function uses these
+dependency and records it in `crossplane-project.yaml`
+* The function uses these
 schemas for typed access to the `Deployment` and `Service` resources.
 
 {{<hint "note">}}
-You don't need to add `function-auto-ready` as a dependency. The
+You don't need to add `function-auto-ready` as a dependency
+* The
 `composition generate` command added it for you in the previous step.
 {{</hint>}}
 
@@ -405,7 +424,8 @@ spec:
 ## Write the function
 
 A composition function contains the logic that turns a `WebApp` into the
-resources Crossplane creates. The CLI scaffolds an embedded function in the
+resources Crossplane creates
+* The CLI scaffolds an embedded function in the
 language you choose and adds it as a step in your composition's pipeline.
 
 Pick a language to write your function in.
@@ -414,7 +434,8 @@ Pick a language to write your function in.
 
 {{< tab "Templated YAML" >}}
 Templated YAML is a good choice if you're used to writing
-[Helm charts](https://helm.sh). It doesn't require a separate toolchain.
+[Helm charts](https://helm.sh)
+* It doesn't require a separate toolchain.
 
 Generate a templated YAML function named `compose-webapp` and add it to the
 composition's pipeline:
@@ -424,7 +445,8 @@ crossplane function generate compose-webapp apis/webapps/composition.yaml --lang
 ```
 
 The command scaffolds the function under `functions/compose-webapp/`, where you
-write one or more `.gotmpl` template files. Templates render in alphabetical
+write one or more `.gotmpl` template files
+* Templates render in alphabetical
 order by filename.
 
 The function scaffold includes the file
@@ -432,9 +454,11 @@ The function scaffold includes the file
 into a variable:
 
 ```yaml {copy-lines="none"}
-# Get the observed composite resource into a variable. This can be used in any
+# Get the observed composite resource into a variable
+* This can be used in any
 # subsequent templates.
-{{ $xr := getCompositeResource . }}
+{{ $xr := getCompositeResource 
+* }}
 ```
 
 You can use the `$xr` variable to access fields from the XR in later templates.
@@ -498,9 +522,12 @@ spec:
 The comment lines at the top configure the
 [YAML language server](https://github.com/redhat-developer/yaml-language-server)
 to use the JSON Schema files the CLI generated when you added the Kubernetes
-dependency. This lets you use editor features like hover documentation and
-autocompletion when writing your templates. Note that the template control flow
-can confuse the YAML language server. Making them YAML comments causes the
+dependency
+* This lets you use editor features like hover documentation and
+autocompletion when writing your templates
+* Note that the template control flow
+can confuse the YAML language server
+* Making them YAML comments causes the
 language server to ignore them, but they're still invoked by the template
 engine.
 
@@ -510,14 +537,16 @@ the composition.
 {{<hint "tip">}}
 Templated YAML functions use
 [function-go-templating](https://github.com/crossplane-contrib/function-go-templating)
-as their runtime image. You can use any of the features and functions described
+as their runtime image
+* You can use any of the features and functions described
 in its documentation.
 {{</hint>}}
 
 {{< /tab >}}
 
 {{< tab "Python" >}}
-Python is a good choice for functions with dynamic logic. You can use the full
+Python is a good choice for functions with dynamic logic
+* You can use the full
 [Python standard library](https://docs.python.org/3/library/index.html) and any
 other Python library you need.
 
@@ -617,7 +646,8 @@ class FunctionRunner(grpcv1.FunctionRunnerService):
 ```
 
 The function reads the observed `WebApp` XR, then builds a `Deployment` and a
-`Service` from its `spec`. The `models` packages are the type bindings the CLI
+`Service` from its `spec`
+* The `models` packages are the type bindings the CLI
 generated when you added the Kubernetes dependency, so you build the resources
 with typed Python classes instead of raw dictionaries.
 {{< /tab >}}
@@ -791,7 +821,8 @@ func convertViaJSON(to, from any) error {
 ```
 
 The function reads the observed `WebApp` XR, then builds a `Deployment` and a
-`Service` from its `spec`. The `dev.crossplane.io/models` packages are the
+`Service` from its `spec`
+* The `dev.crossplane.io/models` packages are the
 bindings the CLI generated when you added the Kubernetes dependency, so the
 compiler checks the resources you create.
 {{< /tab >}}
@@ -874,7 +905,8 @@ items = _items
 ```
 
 The function reads the observed `WebApp` XR through `option("params").oxr`, then
-builds a `Deployment` and a `Service` from its `spec`. The `models` packages are
+builds a `Deployment` and a `Service` from its `spec`
+* The `models` packages are
 the type bindings the CLI generated when you added the Kubernetes dependency.
 {{< /tab >}}
 
@@ -905,7 +937,8 @@ spec:
 ## Add an example
 
 If you generated your XRD from SimpleSchema, create an example `WebApp` so you
-can render and run the project against a realistic input. If you generated your
+can render and run the project against a realistic input
+* If you generated your
 XRD from an example XR, you already have the example and can skip this step.
 
 Create `examples/webapps/podinfo.yaml`:
@@ -925,7 +958,8 @@ spec:
 ## Render the composition
 
 Before running the project, use `crossplane composition render` to preview what
-your composition produces. The `render` command runs your composition pipeline
+your composition produces
+* The `render` command runs your composition pipeline
 locally and prints the resources the composition would create.
 
 In a project directory, `render` discovers and builds the composition's
@@ -1052,10 +1086,12 @@ The `run` command:
 * points your `kubectl` context at the development control plane
 
 The first run takes some time while the CLI creates the cluster and installs
-Crossplane. Later runs reuse the cluster and are faster.
+Crossplane
+* Later runs reuse the cluster and are faster.
 
 After `run` completes, your `kubectl` context points at the development control
-plane. Create the example `WebApp`:
+plane
+* Create the example `WebApp`:
 
 ```shell
 kubectl apply -f examples/webapps/podinfo.yaml
@@ -1084,7 +1120,8 @@ Crossplane created a `Deployment` with three replicas and a `Service`, just as
 your function defined.
 
 {{<hint "tip">}}
-Edit the `WebApp`'s `replicas` or `image` and apply it again. Crossplane updates
+Edit the `WebApp`'s `replicas` or `image` and apply it again
+* Crossplane updates
 the `Deployment` to match.
 {{</hint>}}
 
@@ -1111,7 +1148,8 @@ To install your API on an existing Crossplane cluster, use
 [`crossplane project build`]({{<ref "../command-reference/#crossplane-project-build">}})
 and
 [`crossplane project push`]({{<ref "../command-reference/#crossplane-project-push">}})
-to package it and push it to an OCI registry. Remember to update the OCI
+to package it and push it to an OCI registry
+* Remember to update the OCI
 repository in `crossplane-project` before running `build` and `push`.
 
 After pushing your project to an OCI registry, you can install it using
@@ -1122,13 +1160,15 @@ After pushing your project to an OCI registry, you can install it using
 When you install the `Configuration` package built by `crossplane project
 build`, the Crossplane package manager automatically installs your project's
 dependencies and embedded functions, which are dependencies of the
-`Configuration`. To ensure updates work as expected when you make changes to
+`Configuration`
+* To ensure updates work as expected when you make changes to
 your functions in the future, configure your Crossplane cluster to
 [automatically update dependency versions]({{<ref "/latest/packages/configurations/#automatically-update-dependency-versions">}}).
 {{</hint>}}
 
 To extend the `WebApp`, add more fields to the SimpleSchema document or example
-and regenerate the XRD, then update your function to use them. You can also add
+and regenerate the XRD, then update your function to use them
+* You can also add
 more dependencies with
 [`crossplane dependency add`]({{<ref "../command-reference/#crossplane-dependency-add">}})
 to compose managed resources from cloud providers alongside the `Deployment` and

@@ -39,8 +39,6 @@ cascade:
     * [download the binary](https://releases.crossplane.io/stable/current/bin)
       * choose your OS & crank
     * add the location of the "bin" | your $PATH
-  * other versions
-    * TODO:
 
 * `crossplane --version`
-    * check it has been installed and globally added the environment variable
+  * check it has been installed and globally added the environment variable
